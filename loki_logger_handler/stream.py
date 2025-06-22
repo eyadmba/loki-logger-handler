@@ -100,8 +100,8 @@ class Stream(object):
 
 
 
-class EnhancedJsonLoggerSerializer(JSONSerializer):
-    def default(self, data: Any) -> Any:
+class EnhancedJsonLoggerSerializer(json.JSONEncoder):
+    def default(self, data):
         """Transform unknown types into strings."""
 
         try:
