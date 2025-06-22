@@ -72,7 +72,7 @@ class Stream(object):
             # Fallback to the current time in nanoseconds if the timestamp is missing or invalid
             timestamp = str(time_ns())
         
-        formatted_value = json.dumps(value, ensure_ascii=False) if self.message_in_json_format else value
+        formatted_value = json.dumps(value, ensure_ascii=False, cls=EnhancedJsonLoggerSerializer) if self.message_in_json_format else value
         if metadata or self.loki_metadata:
             # Ensure both metadata and self.loki_metadata are dictionaries (default to empty dict if None)
             metadata = metadata if metadata is not None else {}
@@ -97,3 +97,14 @@ class Stream(object):
             str: The JSON string representation of the Stream object.
         """
         return json.dumps(self, cls=_StreamEncoder)
+
+
+
+class EnhancedJsonLoggerSerializer(JSONSerializer):
+    def default(self, data: Any) -> Any:
+        """Transform unknown types into strings."""
+
+        try:
+            return super().default(data)
+        except TypeError:
+            return str(type(data))
