@@ -1,5 +1,6 @@
 import time
 import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 # Compatibility for Python 2 and 3
 try:
@@ -100,7 +101,7 @@ class Stream(object):
 
 
 
-class EnhancedJsonLoggerSerializer(json.JSONEncoder):
+class EnhancedJsonLoggerSerializer(DjangoJSONEncoder):
     def default(self, data):
         """Transform unknown types into strings."""
 
